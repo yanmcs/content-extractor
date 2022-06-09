@@ -66,6 +66,9 @@ def extract_html_from_url(url, session):
         while i < 5:
             time.sleep(1)
             if session.execute_script("return document.readyState") == "complete":
+                # scroll page a little to simulate a human user
+                session.execute_script("window.scrollBy(0, 100)")
+                time.sleep(1)
                 html = session.page_source
                 i = 5
             i += 1
