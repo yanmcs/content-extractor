@@ -1,0 +1,46 @@
+<html>
+    <head>
+        <title>Content extractor</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+        <style>
+            label, input, select{
+                margin: 5px 0;
+                padding: 5px 10px;
+            }
+            form{
+                font-size: 18px;
+            }
+        </style>
+    </head>
+    <body style="text-align:center;">
+        <h1>Content extractor</h1>
+        <p>
+            You can extract the content of any article from the web. Just paste the URL of the article and submit the form.
+        </p>
+        <p>
+            <b>Clean HTML</b> will return the content of the article with the HTML tags.<br>
+            <b>Clean text</b> will return the content of the article without the HTML tags.<br>
+            <b>JSON format</b> will give you the headings and the paragraphs within them.<br>
+            <b>Links</b> will give you the links within the article.
+        </p>
+        <form method="get" action="/">
+            <p>Enter URL for article:</p>
+            <input type="text" name="url">
+    
+            <select name="format">
+                <option value="html">Clean HTML</option>
+                <option value="text">Text only</option>
+                <option value="json">JSON format</option>
+                <option value="links">Links</option>
+            </select>
+    
+            <input type="submit" value="Submit">
+            <input type="reset" value="Reset">
+        </form>
+        <p>
+            You can find the source code of this project on <a href="https://github.com/yanmcs/content-extractor" target="_blank">Github</a>.
+        </p>
+    </body>
+    </html>
