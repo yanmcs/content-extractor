@@ -5,6 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="utf-8">
         <style>
+            body {
+                padding: 20px;
+            }
             label, input, select{
                 margin: 5px 0;
                 padding: 5px 10px;
@@ -27,27 +30,28 @@
         </p>
         <p>
             <u>Sometimes we have to use Chrome</u> to extract the content from websites that don't allow us to extract the content using some Javascript protection.<br>
-            Chrome is used automatically when required, but you can also use it manually. <b>Always use Chrome</b> takes more time.
+            Chrome is used automatically when required, but you can also set to use it manually. <b>Always use Chrome</b> takes more time.
         </p>
         <form method="get" action="/">
-            <p>Enter URL for article:</p>
-            <input type="text" name="url"><br>
-    
+            <label>URL of the article:</label><br>
+            <input style="width: 700px; max-width: 100%;" type="text" name="url"><br>
+            
+            <label>Output format:</label>
             <select name="format">
                 <option value="html">Clean HTML</option>
                 <option value="text">Text only</option>
                 <option value="json">JSON format</option>
                 <option value="links">Links</option>
             </select><br>
-            <p>
+            <label>
                 Shall we use Chrome?
-            </p>
+            </label>
             <select name="chrome">
                 <option value="no">If needed</option>
                 <option value="yes">Always use chrome</option>
             </select><br>
     
-            <input type="submit" value="Get content"><br>
+            <input type="submit" value="Get content">
             <input type="reset" value="Reset form">
         </form>
         <p>
