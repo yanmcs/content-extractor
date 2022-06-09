@@ -8,7 +8,7 @@ import json
 
 
 app = Flask(__name__)
-#browser = content_extractor.chrome_session(local=False)
+browser = content_extractor.chrome_session(local=False)
 cfscrape_session = content_extractor.cfscrape_session
 
 
@@ -48,9 +48,11 @@ def text():
             # Get html from url
             # Try using cfscrape first
             html = content_extractor.extract_html_from_url(url, cfscrape_session())
-            #if not html:
+            print(html)
+            if not html:
                 # If cfscrape fails, use Chrome
-                #html = content_extractor.extract_html_from_url(url, browser)
+                html = content_extractor.extract_html_from_url(url, browser)
+                print(html)
             # Parse html to json
             result = content_extractor.html_to_json(html)
         except Exception as e:
