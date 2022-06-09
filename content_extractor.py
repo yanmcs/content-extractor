@@ -174,7 +174,7 @@ def html_to_json(html):
         if heading.text:
             # Create a dictionary with heading and paragraphs
             heading_dict = {"heading": heading.text, "paragraphs": []}
-            # Find all paragraphs below the heading
+            # Find all paragraphs below the heading before the next heading
             paragraphs = heading.find_next_siblings(['p','ol','ul'])
             for paragraph in paragraphs:
                 # check if is ol
@@ -216,6 +216,9 @@ def html_to_json(html):
         # Find all paragraphs below the heading
         paragraphs = heading.find_next_siblings(['p','ol', 'ul'])
         for paragraph in paragraphs:
+            # break if heading
+            if paragraph.name == 'h1' or paragraph.name == 'h2' or paragraph.name == 'h3' or paragraph.name == 'h4':
+                break
             # check if is ol
             if paragraph.name == 'ol' or paragraph.name == 'ul':
                 # Find all li inside the ol
