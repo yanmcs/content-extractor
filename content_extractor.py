@@ -236,24 +236,4 @@ def html_to_json(html):
 
     return result
 
-if __name__ == "__main__":
-    """
-    Setting some automated testing to see if everything works
-    """
-    # Get html using chrome
-    #chrome = chrome_sesion(local=True)
-    #url = "https://www.example.com/"
-    #html = extract_html_from_url(url, session=chrome)
-    #print(html)
-    
-    # Get html using cfscrape
-    cf_session = cfscrape_session()
-    url = "https://www.example.com/"
-    html = extract_html_from_url(url, session=cf_session)
-    print(html)
-
-    # get json from html
-    json_result = html_to_json(html)
-    print(json_result['article_text'])
-
 
