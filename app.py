@@ -16,27 +16,28 @@ def index():
     if 'url' in request.args:
         try:
             url = request.args.get('url')  # set variable for url
+            format = request.args.get('format')  # set variable for format
+            chrome = request.args.get('chrome')  # set variable for chrome usage
             # Get html from url
-            # Try using cfscrape first
-            html = content_extractor.extract_html_from_url(url, cfscrape_session())
-            print(html)
+            # Try using cfscrape first if chrome is set to no
+            if chrome == "no":
+                html = content_extractor.extract_html_from_url(url, cfscrape_session())
             if not html:
-                # If cfscrape fails, use Chrome
+                # If cfscrape fails or chrome is set yes, we use Chrome
                 html = content_extractor.extract_html_from_url(url, browser)
-                print(html)
             # Parse html to json
             result = content_extractor.html_to_json(html)
         except Exception as e:
             return str(e), 500, {'Content-Type': 'text/plain; charset=utf-8'}
         else:
             # return article text
-            if request.args.get('format') == 'json':
+            if format == 'json':
                 return json.dumps(result['article_content']), 200, {'Content-Type': 'application/json'}
-            elif request.args.get('format') == 'text':
+            elif format == 'text':
                 return str(result['article_text']), 200, {'Content-Type': 'text/plain; charset=utf-8'}
-            elif request.args.get('format') == 'html':
+            elif format == 'html':
                 return str(result['article_html_content']), 200, {'Content-Type': 'text/html; charset=utf-8'}
-            elif request.args.get('format') == 'links':
+            elif format == 'links':
                 return json.dumps(result['urls']), 200, {'Content-Type': 'application/json'}
             else:
                 return json.dumps(result), 200, {'Content-Type': 'application/json'}
