@@ -22,8 +22,10 @@ def index():
             # Try using cfscrape first if chrome is set to no
             if chrome == "no":
                 html = content_extractor.extract_html_from_url(url, cfscrape_session())
-            if not html:
-                # If cfscrape fails or chrome is set yes, we use Chrome
+                if not html:
+                    # If cfscrape fails or chrome is set yes, we use Chrome
+                    html = content_extractor.extract_html_from_url(url, browser)
+            else:
                 html = content_extractor.extract_html_from_url(url, browser)
             # Parse html to json
             result = content_extractor.html_to_json(html)
