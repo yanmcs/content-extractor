@@ -112,6 +112,9 @@ def html_to_json(html):
             number_of_paragraphs = len(div.find_all('p'))
             if number_of_paragraphs > len(div_with_most_paragraphs):
                 div_with_most_paragraphs = div
+    # If div_with_most_paragraphs has less than 3 paragraphs, we will use body
+    if len(div_with_most_paragraphs.find_all('p')) < 3:
+        div_with_most_paragraphs = soup.find('body')
     
     # Setting urls
     # Find all urls inside the div with most paragraphs
@@ -177,6 +180,9 @@ def html_to_json(html):
             # Find all paragraphs below the heading before the next heading
             paragraphs = heading.find_next_siblings(['p','ol','ul'])
             for paragraph in paragraphs:
+                # break if heading
+                if paragraph.name == 'h1' or paragraph.name == 'h2' or paragraph.name == 'h3' or paragraph.name == 'h4':
+                    break
                 # check if is ol
                 if paragraph.name == 'ol' or paragraph.name == 'ul':
                     # Find all li inside the ol
