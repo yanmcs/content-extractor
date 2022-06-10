@@ -147,9 +147,12 @@ def html_to_json(html):
                 result["article_html_content"] += "<p>" + tag.text.strip() + "</p>\n"
         elif tag.name == 'ol' or tag.name == 'ul':
             result['article_html_content'] += '<' + tag.name + '>\n'
-            for li in tag.find_all('li'):
-                if li.text and " " in li.text.strip():
-                    result["article_html_content"] += "<li>" + li.text.strip() + "</li>\n"
+            # We check if there is more than 1 li in the ol/ul
+            # If there is, we will iterate through all li
+            if len(tag.find_all('li')) > 1:
+                for li in tag.find_all('li'):
+                    if li.text and " " in li.text.strip():
+                        result["article_html_content"] += "<li>" + li.text.strip() + "</li>\n"
             result['article_html_content'] += '</' + tag.name + '>\n'
 
     # Now we soup the article_html_content
