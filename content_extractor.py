@@ -135,10 +135,6 @@ def html_to_json(html):
             result["article_html_content"] += "<h3>" + tag.text + "</h3>\n"
         elif tag.name == 'h4':
             result["article_html_content"] += "<h4>" + tag.text + "</h4>\n"
-        elif tag.name == 'h5':
-            result["article_html_content"] += "<h5>" + tag.text + "</h5>\n"
-        elif tag.name == 'h6':
-            result["article_html_content"] += "<h6>" + tag.text + "</h6>\n"
         elif tag.name == 'p':
             # We check if paragraph has at least one space (" ")
             # At least any punctuation anywhere in the paragraph text
