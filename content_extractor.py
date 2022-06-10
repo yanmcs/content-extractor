@@ -15,6 +15,7 @@ import os
 from bs4 import BeautifulSoup as Bs
 import cfscrape
 import time
+from string import punctuation
 
 
 def chrome_session(local=False):
@@ -112,6 +113,7 @@ def html_to_json(html):
             number_of_paragraphs = len(div.find_all('p'))
             if number_of_paragraphs > len(div_with_most_paragraphs):
                 div_with_most_paragraphs = div
+
     # If div_with_most_paragraphs has less than 3 paragraphs, we will use body
     if len(div_with_most_paragraphs.find_all('p')) < 3:
         div_with_most_paragraphs = soup.find('body')
@@ -125,8 +127,8 @@ def html_to_json(html):
     # Setting article_html_content
     h1 = soup.find_all('h1')[-1]
     result['article_html_content'] = "<h1>" + h1.text + "</h1>\n"
-    # iterate through all tags inside div
-    for tag in div_with_most_paragraphs:
+    # iterate through all tags inside div if nested
+    for tag in div_with_most_paragraphs.find_all(True):
         if tag.name == 'h2':
             result["article_html_content"] += "<h2>" + tag.text + "</h2>\n"
         elif tag.name == 'h3':
@@ -138,12 +140,16 @@ def html_to_json(html):
         elif tag.name == 'h6':
             result["article_html_content"] += "<h6>" + tag.text + "</h6>\n"
         elif tag.name == 'p':
-            if tag.text:
-                result["article_html_content"] += "<p>" + tag.text + "</p>\n"
+            # We check if paragraph has at least one space (" ")
+            # At least any punctuation anywhere in the paragraph text
+            # To avoid empty paragraphs that make no sense
+            if tag.text and " " in tag.text.strip() and any(p in tag.text for p in punctuation):
+                result["article_html_content"] += "<p>" + tag.text.strip() + "</p>\n"
         elif tag.name == 'ol' or tag.name == 'ul':
             result['article_html_content'] += '<' + tag.name + '>\n'
             for li in tag.find_all('li'):
-                result["article_html_content"] += "<li>" + li.text + "</li>\n"
+                if li.text and " " in li.text.strip():
+                    result["article_html_content"] += "<li>" + li.text.strip() + "</li>\n"
             result['article_html_content'] += '</' + tag.name + '>\n'
 
     # Now we soup the article_html_content

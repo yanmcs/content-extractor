@@ -8,7 +8,7 @@ import json
 
 
 app = Flask(__name__)
-browser = content_extractor.chrome_session(local=False)
+browser = content_extractor.chrome_session(local=True)
 cfscrape_session = content_extractor.cfscrape_session
 
 @app.route('/')
