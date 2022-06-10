@@ -150,7 +150,7 @@ def html_to_json(html):
                 if li.text and " " in li.text.strip():
                     list += "<li>" + li.text.strip() + "</li>\n"
             list += '</' + tag.name + '>\n'
-            if len(list.split("</li>")) > 1:
+            if len(list.split("</li>")) > 2:
                 result["article_html_content"] += list
 
     # Now we soup the article_html_content
