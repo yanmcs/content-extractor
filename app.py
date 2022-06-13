@@ -31,9 +31,9 @@ def index():
                     print("Chrome failed to open session")
                     # Restart chrome
                     # Close old chrome session
-                    try:
+                    try:                        
+                        browser.close()
                         browser.quit()
-                        browser.close
                     except:
                         pass
                     # Start new chrome session
