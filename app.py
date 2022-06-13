@@ -11,7 +11,6 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    browser = content_extractor.chrome_session(local=False)
     cfscrape_session = content_extractor.cfscrape_session
     if 'url' in request.args:
         try:
@@ -22,25 +21,14 @@ def index():
             # Get html from url
             html = content_extractor.extract_html_from_url(url, cfscrape_session())
 
-            # If cfscrape fails or chrome is set yes, we use Chrome
+            # If cfscrape fails or always use Chrome is set yes, we use Chrome
             # Check if html is valid or always use Chrome is set to yes
             if not html or always_use_chrome == 'yes':
-                html = content_extractor.extract_html_from_url(url, browser)
-                # Check if chrome has worked
-                if 'invalid session id' in html or 'Console Locked' in html:
-                    print("Chrome failed to open session")
-                    # Restart chrome
-                    # Close old chrome session
-                    try:                        
-                        browser.close()
-                        browser.quit()
-                    except:
-                        pass
-                    # Start new chrome session
-                    browser = content_extractor.chrome_session(local=False)
-                    # Try again
-                    html = content_extractor.extract_html_from_url(url, browser)
-                
+                browser = content_extractor.chrome_session(local=False)   
+                browser.close()
+                browser.quit()
+                html = content_extractor.extract_html_from_url(url, browser)        
+
             # Parse html to json
             result = content_extractor.html_to_json(html)
         except Exception as e:
