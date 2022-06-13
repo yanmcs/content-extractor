@@ -8,11 +8,11 @@ import json
 
 
 app = Flask(__name__)
-browser = content_extractor.chrome_session(local=False)
-cfscrape_session = content_extractor.cfscrape_session
 
 @app.route('/')
 def index():
+    browser = content_extractor.chrome_session(local=False)
+    cfscrape_session = content_extractor.cfscrape_session
     if 'url' in request.args:
         try:
             url = request.args.get('url')  # set variable for url
@@ -30,7 +30,6 @@ def index():
                 if 'invalid session id' in html:
                     print("Chrome failed to open session")
                     # Restart chrome
-                    global browser
                     # Close old chrome session
                     try:
                         browser.quit()
