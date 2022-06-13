@@ -17,16 +17,31 @@ def index():
         try:
             url = request.args.get('url')  # set variable for url
             format = request.args.get('format')  # set variable for format
-            chrome = request.args.get('chrome')  # set variable for chrome usage
+            always_use_chrome = request.args.get('chrome')  # set variable for chrome usage
+
             # Get html from url
-            # Try using cfscrape first if chrome is set to no
-            if chrome == "no":
-                html = content_extractor.extract_html_from_url(url, cfscrape_session())
-                if not html:
-                    # If cfscrape fails or chrome is set yes, we use Chrome
-                    html = content_extractor.extract_html_from_url(url, browser)
-            else:
+            html = content_extractor.extract_html_from_url(url, cfscrape_session())
+
+            # Check if html is valid and chrome is set to yes
+            if not html or always_use_chrome == 'yes':
+                # If cfscrape fails or chrome is set yes, we use Chrome
                 html = content_extractor.extract_html_from_url(url, browser)
+                # Check if chrome has worked
+                if 'invalid session id' in html:
+                    print("Chrome failed to open session")
+                    # Restart chrome
+                    global browser
+                    # Close old chrome session
+                    try:
+                        browser.quit()
+                        browser.close
+                    except:
+                        pass
+                    # Start new chrome session
+                    browser = content_extractor.chrome_session(local=False)
+                    # Try again
+                    html = content_extractor.extract_html_from_url(url, browser)
+                
             # Parse html to json
             result = content_extractor.html_to_json(html)
         except Exception as e:
