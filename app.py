@@ -22,12 +22,12 @@ def index():
             # Get html from url
             html = content_extractor.extract_html_from_url(url, cfscrape_session())
 
-            # Check if html is valid and chrome is set to yes
+            # If cfscrape fails or chrome is set yes, we use Chrome
+            # Check if html is valid or always use Chrome is set to yes
             if not html or always_use_chrome == 'yes':
-                # If cfscrape fails or chrome is set yes, we use Chrome
                 html = content_extractor.extract_html_from_url(url, browser)
                 # Check if chrome has worked
-                if 'invalid session id' in html:
+                if 'invalid session id' in html or 'Console Locked' in html:
                     print("Chrome failed to open session")
                     # Restart chrome
                     # Close old chrome session

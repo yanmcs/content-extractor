@@ -75,7 +75,10 @@ def extract_html_from_url(url, session):
             i += 1
     else:
         response = session.get(url)
-        html = response.text
+        if response.status_code == 200:
+            html = response.text
+        else:
+            html = None
     return html
 
 
