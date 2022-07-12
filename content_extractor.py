@@ -110,12 +110,18 @@ def html_to_json(html):
     # Find div with most paragraphs
     # Usually the div with the most paragraphs is the one with the article content
     div_with_most_paragraphs = ''
-    divs = soup.find_all(['div', 'article', 'section'])
-    for div in divs:
-        if div.find_all('p'):
-            number_of_paragraphs = len(div.find_all('p'))
-            if number_of_paragraphs > len(div_with_most_paragraphs):
-                div_with_most_paragraphs = div
+    # Check if there is an article tag
+    # If there is, we will use that div
+    article_tag = soup.find("article")
+    if article_tag:
+        div_with_most_paragraphs = article_tag
+    else:
+        divs = soup.find_all(['div', 'article', 'section', 'main'])
+        for div in divs:
+            if div.select('p'):
+                number_of_paragraphs = len(div.select('p'))
+                if number_of_paragraphs > len(div_with_most_paragraphs):
+                    div_with_most_paragraphs = div
 
     # If div_with_most_paragraphs has less than 3 paragraphs, we will use body
     if len(div_with_most_paragraphs.find_all('p')) < 3:
