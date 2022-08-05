@@ -2,7 +2,6 @@
 import content_extractor
 # Everything else
 from flask import Flask, request, render_template
-from flask_restful import reqparse
 import os
 import json
 
