@@ -16,7 +16,6 @@ from bs4 import BeautifulSoup as Bs
 import cfscrape
 import time
 from string import punctuation
-from selenium.webdriver.chrome.options import Options
 import undetected_chromedriver.v2 as uc
 
 
@@ -24,10 +23,9 @@ def chrome_session(headless=True):
     """
     Returns a google chrome session
     """
-    options = Options()
+    options = webdriver.ChromeOptions() 
     if headless:
         options.add_argument('--headless')
-    options = webdriver.ChromeOptions() 
     options.add_argument("start-maximized")
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
