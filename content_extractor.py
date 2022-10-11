@@ -40,9 +40,7 @@ class ChromeSession:
 
     def __exit__(self, exc_type, exc_value, traceback):
         self.driver.quit()
-
-    def __del__(self):
-        self.driver.quit()
+        
 
 def cfscrape_session():
     """
