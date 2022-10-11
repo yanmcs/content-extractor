@@ -16,7 +16,6 @@ from bs4 import BeautifulSoup as Bs
 import cfscrape
 import time
 from string import punctuation
-from webdriver_manager.chrome import ChromeDriverManager
 
 
 def chrome_session(headless=True):
