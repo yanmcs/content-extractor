@@ -61,7 +61,7 @@ def extract_html_from_url(url, session):
         url = "http://" + url
 
     # Check if session is chrome or request
-    if isinstance(session, webdriver.chrome.webdriver.WebDriver):
+    if isinstance(session, webdriver.chrome.webdriver.WebDriver): 
         with session as chrome_session:
             chrome_session.get(url)
             # Waiting page load
