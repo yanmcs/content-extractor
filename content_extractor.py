@@ -24,20 +24,16 @@ def chrome_session(headless=True):
     """
     Returns a google chrome session
     """
-    
     options = Options()
     if headless:
         options.add_argument('--headless')
-    options.add_argument('--disable-gpu')
+    options = webdriver.ChromeOptions() 
+    options.add_argument("start-maximized")
+    options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-
-    # For ChromeDriver version 79.0.3945.16 or over
-    options.add_argument('--disable-blink-features=AutomationControlled')
-    # Set user agent
-    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36")
     
-    driver = uc.Chrome()
+    driver = uc.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=options)
     
     return driver
 
