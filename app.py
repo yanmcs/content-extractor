@@ -26,7 +26,7 @@ def index():
                 browser = content_extractor.chrome_session()
                 browser.close()
                 browser.quit()
-                html = content_extractor.extract_html_from_url(url, browser)        
+                html = content_extractor.extract_html_from_url(url, content_extractor.chrome_session)        
 
             # Parse html to json
             result = content_extractor.html_to_json(html)
