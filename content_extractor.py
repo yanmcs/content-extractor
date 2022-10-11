@@ -17,26 +17,35 @@ import cfscrape
 import time
 from string import punctuation
 
-
-def chrome_session(headless=True):
+class ChromeSession:
     """
-    Returns a google chrome session
-    """
-    options = webdriver.ChromeOptions() 
-    if headless:
-        options.add_argument('--headless')
-    options.add_argument("start-maximized")
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    options.add_argument('--disable-gpu')
-    options.add_argument('--disable-extensions')
-    options.add_argument('--disable-browser-side-navigation')
-    options.add_argument('--disable-infobars')
+    Class to manage a Chrome session
+    """        
 
-    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=options)
+    def __init__(self, headless=True):
+        self.options = webdriver.ChromeOptions() 
+        if headless:
+            self.options.add_argument('--headless')
+        self.options.add_argument("start-maximized")
+        self.options.add_argument('--no-sandbox')
+        self.options.add_argument('--disable-dev-shm-usage')
+        self.options.add_argument('--disable-gpu')
+        self.options.add_argument('--disable-extensions')
+        self.options.add_argument('--disable-browser-side-navigation')
+        self.options.add_argument('--disable-infobars')
+        self.driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=self.options)
+
+    def __enter__(self):
+        return self.driver
+
+    def __exit__(self):
+        self.driver.quit()
+
+    def __del__(self):
+        self.driver.quit()
     
-    return driver
-
+    def get(self, url):
+        self.driver.get(url)
 
 def cfscrape_session():
     """
@@ -55,19 +64,20 @@ def extract_html_from_url(url, session):
         url = "http://" + url
 
     # Check if session is chrome or request
-    if isinstance(session, webdriver.Chrome):
-        session.get(url)
-        # Waiting page load
-        i = 0
-        while i < 5:
-            time.sleep(1)
-            if session.execute_script("return document.readyState") == "complete":
-                # scroll page a little to simulate a human user
-                session.execute_script("window.scrollBy(0, 100)")
+    if isinstance(session, ChromeSession):
+        with session as chrome_session:
+            chrome_session.get(url)
+            # Waiting page load
+            i = 0
+            while i < 5:
                 time.sleep(1)
-                html = session.page_source
-                i = 5
-            i += 1
+                if chrome_session.execute_script("return document.readyState") == "complete":
+                    # scroll page a little to simulate a human user
+                    chrome_session.execute_script("window.scrollBy(0, 100)")
+                    time.sleep(1)
+                    html = chrome_session.page_source
+                    i = 5
+                i += 1
     else:
         response = session.get(url)
         if response.status_code == 200:
