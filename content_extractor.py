@@ -17,7 +17,7 @@ import cfscrape
 import time
 from string import punctuation
 from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
+import undetected_chromedriver.v2 as uc
 
 
 def chrome_session(headless=True):
@@ -37,7 +37,7 @@ def chrome_session(headless=True):
     # Set user agent
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36")
     
-    driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+    driver = uc.Chrome()
     
     return driver
 

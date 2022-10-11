@@ -42,6 +42,8 @@ def index():
                 return str(result['article_html_content']), 200, {'Content-Type': 'text/html; charset=utf-8'}
             elif format == 'links':
                 return json.dumps(result['urls']), 200, {'Content-Type': 'application/json'}
+            elif format == 'full_html':
+                return str(html), 200, {'Content-Type': 'text/html; charset=utf-8'}
             else:
                 return json.dumps(result), 200, {'Content-Type': 'application/json'}
     else:
