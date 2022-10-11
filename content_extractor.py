@@ -34,12 +34,7 @@ def chrome_session(headless=True):
     options.add_argument('--disable-browser-side-navigation')
     options.add_argument('--disable-infobars')
 
-    # Create a new instance of Chrome in incognito mode
-    # check if os is windows
-    if os.name == 'nt':
-        driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
-    else:
-        driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=options)
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=options)
     
     return driver
 
