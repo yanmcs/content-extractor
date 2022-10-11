@@ -16,7 +16,6 @@ from bs4 import BeautifulSoup as Bs
 import cfscrape
 import time
 from string import punctuation
-import undetected_chromedriver.v2 as uc
 
 
 def chrome_session(headless=True):
@@ -30,8 +29,18 @@ def chrome_session(headless=True):
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-    
-    driver = uc.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=options)
+    options.add_argument('--disable-gpu')
+    options.add_argument('--disable-extensions')
+    options.add_argument('--disable-browser-side-navigation')
+    options.add_argument('--disable-infobars')
+    options.add_argument('--window-size=1920,1080')
+    options.add_argument('--ignore-certificate-errors')
+    options.add_argument('--ignore-ssl-errors')
+    options.add_argument('--allow-running-insecure-content')
+    options.add_argument('--disable-web-security')
+
+    # Create a new instance of Chrome in incognito mode
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=options)
     
     return driver
 
