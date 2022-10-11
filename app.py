@@ -23,10 +23,8 @@ def index():
             # If cfscrape fails or always use Chrome is set yes, we use Chrome
             # Check if html is valid or always use Chrome is set to yes
             if not html or always_use_chrome == 'yes':
-                browser = content_extractor.chrome_session()
-                browser.close()
-                browser.quit()
-                html = content_extractor.extract_html_from_url(url, content_extractor.chrome_session)        
+                with content_extractor.ChromeSession() as chrome_session:
+                    html = content_extractor.extract_html_from_url(url, chrome_session)       
 
             # Parse html to json
             result = content_extractor.html_to_json(html)
