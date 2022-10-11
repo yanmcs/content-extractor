@@ -38,14 +38,11 @@ class ChromeSession:
     def __enter__(self):
         return self.driver
 
-    def __exit__(self):
+    def __exit__(self, exc_type, exc_value, traceback):
         self.driver.quit()
 
     def __del__(self):
         self.driver.quit()
-    
-    def get(self, url):
-        self.driver.get(url)
 
 def cfscrape_session():
     """
