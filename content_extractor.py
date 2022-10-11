@@ -16,30 +16,28 @@ from bs4 import BeautifulSoup as Bs
 import cfscrape
 import time
 from string import punctuation
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 
 
-def chrome_session(local=False):
+def chrome_session(headless=True):
     """
     Returns a google chrome session
     """
-    options = webdriver.ChromeOptions()
-    if not local:
-        options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")  # disable for local run, enable to commit
-    options.add_argument("--headless")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-gpu")
+    
+    options = Options()
+    if headless:
+        options.add_argument('--headless')
+    options.add_argument('--disable-gpu')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
 
     # For ChromeDriver version 79.0.3945.16 or over
     options.add_argument('--disable-blink-features=AutomationControlled')
     # Set user agent
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36")
-
-    if local:
-        driver = webdriver.Chrome(options=options) # enable for local run, disable to commit
-    else:
-        driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), \
-                                options=options)  # disable for local run, enable to commit
+    
+    driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
     
     return driver
 
