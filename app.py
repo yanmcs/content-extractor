@@ -47,7 +47,7 @@ def index():
                 else:
                     # adding source url to the text
                     source_text = f'Original article: {url} \n\n'
-                    return source_text +result['article_content'], 200, {'Content-Type': 'text/plain; charset=utf-8'}
+                    return source_text +result['article_text'], 200, {'Content-Type': 'text/plain; charset=utf-8'}
             elif format == 'html':
                 # Translate if needed
                 if translate != 'no':
