@@ -5,6 +5,7 @@ import content_extractor
 from flask import Flask, request, render_template, redirect
 import os
 import json
+import urllib.parse
 
 
 app = Flask(__name__)
@@ -54,6 +55,8 @@ def index():
                     current_url = request.url_root + request.full_path
                     # remove translate query
                     current_url = current_url.replace('&translate=no', '&translated=yes')
+                    # encode url
+                    current_url = urllib.parse.quote(current_url)
                     # redirect to google translate
                     return redirect('https://translate.google.com/translate?sl=auto&tl=' + translate + '&u=' + current_url)
                 else:
