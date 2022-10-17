@@ -39,26 +39,21 @@ def index():
             if format == 'json':
                 return json.dumps(result['article_content']), 200, {'Content-Type': 'application/json'}
             elif format == 'text':# Translate if needed
+                # Translate if needed
                 if translate != 'no':
-                    # get current url
-                    current_url = request.url
-                    # remove translate query
-                    current_url = current_url.replace('&translate=no', '&translated=yes')
+                    # get redirect url
+                    redirect_url = f'https://contentextractor-herokuapp-com.translate.goog/?url={url}&format={format}&chrome={always_use_chrome}&translate=no&_x_tr_sl=auto&_x_tr_tl={translate}'
                     # redirect to google translate
-                    return redirect('https://translate.google.com/translate?sl=auto&tl=' + translate + '&u=' + current_url)
+                    return redirect(redirect_url)
                 else:
                     return str(result['article_text']), 200, {'Content-Type': 'text/plain; charset=utf-8'}
             elif format == 'html':
                 # Translate if needed
                 if translate != 'no':
-                    # get current url
-                    current_url = request.url_root + request.full_path
-                    # remove translate query
-                    current_url = current_url.replace('&translate=no', '&translated=yes')
-                    # encode url
-                    current_url = urllib.parse.quote(current_url)
+                    # get redirect url
+                    redirect_url = f'https://contentextractor-herokuapp-com.translate.goog/?url={url}&format={format}&chrome={always_use_chrome}&translate=no&_x_tr_sl=auto&_x_tr_tl={translate}'
                     # redirect to google translate
-                    return redirect('https://translate.google.com/translate?sl=auto&tl=' + translate + '&u=' + current_url)
+                    return redirect(redirect_url)
                 else:
                     return str(result['article_html_content']), 200, {'Content-Type': 'text/html; charset=utf-8'}
             elif format == 'links':
