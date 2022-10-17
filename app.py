@@ -45,7 +45,9 @@ def index():
                     # redirect to google translate
                     return redirect(redirect_url)
                 else:
-                    return str(result['article_text']), 200, {'Content-Type': 'text/plain; charset=utf-8'}
+                    # adding source url to the text
+                    source_text = f'Original article: {url} \n\n'
+                    return source_text +result['article_content'], 200, {'Content-Type': 'text/plain; charset=utf-8'}
             elif format == 'html':
                 # Translate if needed
                 if translate != 'no':
@@ -54,7 +56,9 @@ def index():
                     # redirect to google translate
                     return redirect(redirect_url)
                 else:
-                    return str(result['article_html_content']), 200, {'Content-Type': 'text/html; charset=utf-8'}
+                    # adding source to html content
+                    source_html = f'<p>Source: <a href="{url}">{url}</a></p>'
+                    return (source_html + str(result['article_html_content'])), 200, {'Content-Type': 'text/html; charset=utf-8'}
             elif format == 'links':
                 return json.dumps(result['urls']), 200, {'Content-Type': 'application/json'}
             elif format == 'full_html':
