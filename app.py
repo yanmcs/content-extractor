@@ -1,7 +1,8 @@
 # MY scripts
 import content_extractor
+
 # Everything else
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect
 import os
 import json
 
@@ -16,6 +17,7 @@ def index():
             url = request.args.get('url')  # set variable for url
             format = request.args.get('format')  # set variable for format
             always_use_chrome = request.args.get('chrome')  # set variable for chrome usage
+            translate = request.args.get('translate')  # set variable for translation
 
             # Get html from url
             html = content_extractor.extract_html_from_url(url, cfscrape_session())
@@ -28,16 +30,34 @@ def index():
 
             # Parse html to json
             result = content_extractor.html_to_json(html)
+
         except Exception as e:
             return str(e), 500, {'Content-Type': 'text/plain; charset=utf-8'}
         else:
             # return article text
             if format == 'json':
                 return json.dumps(result['article_content']), 200, {'Content-Type': 'application/json'}
-            elif format == 'text':
-                return str(result['article_text']), 200, {'Content-Type': 'text/plain; charset=utf-8'}
+            elif format == 'text':# Translate if needed
+                if translate != 'no':
+                    # get current url
+                    current_url = request.url
+                    # remove translate query
+                    current_url = current_url.replace('&translate=no', '&translated=yes')
+                    # redirect to google translate
+                    return redirect('https://translate.google.com/translate?sl=auto&tl=' + translate + '&u=' + current_url)
+                else:
+                    return str(result['article_text']), 200, {'Content-Type': 'text/plain; charset=utf-8'}
             elif format == 'html':
-                return str(result['article_html_content']), 200, {'Content-Type': 'text/html; charset=utf-8'}
+                # Translate if needed
+                if translate != 'no':
+                    # get current url
+                    current_url = request.url
+                    # remove translate query
+                    current_url = current_url.replace('&translate=no', '&translated=yes')
+                    # redirect to google translate
+                    return redirect('https://translate.google.com/translate?sl=auto&tl=' + translate + '&u=' + current_url)
+                else:
+                    return str(result['article_html_content']), 200, {'Content-Type': 'text/html; charset=utf-8'}
             elif format == 'links':
                 return json.dumps(result['urls']), 200, {'Content-Type': 'application/json'}
             elif format == 'full_html':

@@ -34,6 +34,7 @@
             Chrome is used automatically when required, but you can also set to always use it manually. <b>Always use Chrome</b> takes more time.
         </p>
         <form method="get" action="/">
+
             <label>URL of the article:</label><br>
             <input style="width: 700px; max-width: 100%;" type="text" name="url"><br>
             
@@ -45,12 +46,23 @@
                 <option value="links">Links</option>
                 <option value="full_html">Full HTML</option>
             </select><br>
+
             <label>
                 Shall we use Chrome?
             </label>
             <select name="chrome">
                 <option value="no">If needed</option>
                 <option value="yes">Always use chrome</option>
+            </select><br>
+            <label>
+                Translate content? (only works in Clean HTML and Text only)
+            </label>
+
+            <select name="translate">
+                <option value="no">No</option>
+                <option value="pt">Portuguese</option>
+                <option value="en">English</option>
+                <option value="es">Spanish</option>
             </select><br>
     
             <input type="submit" value="Get content">
