@@ -5,7 +5,6 @@ import content_extractor
 from flask import Flask, request, render_template, redirect
 import os
 import json
-import urllib.parse
 
 
 app = Flask(__name__)
