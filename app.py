@@ -51,7 +51,7 @@ def index():
                 # Translate if needed
                 if translate != 'no':
                     # get current url
-                    current_url = request.url
+                    current_url = request.url_root + request.full_path
                     # remove translate query
                     current_url = current_url.replace('&translate=no', '&translated=yes')
                     # redirect to google translate
