@@ -56,7 +56,7 @@ async def index(request: Request, url: str=None, format: str=None, chrome: str=N
             # Translate if needed
             if translate != 'no':
                 # get redirect url
-                redirect_url = f'https://contentextractor-herokuapp-com.translate.goog/?url={url}&format={format}&chrome={always_use_chrome}&translate=no&_x_tr_sl=auto&_x_tr_tl={translate}'
+                redirect_url = f'https://contentextractor-yan-dev-br.translate.goog/?url={url}&format={format}&chrome={always_use_chrome}&translate=no&_x_tr_sl=auto&_x_tr_tl={translate}'
                 # redirect to google translate
                 return RedirectResponse(redirect_url)
             else:
@@ -67,7 +67,7 @@ async def index(request: Request, url: str=None, format: str=None, chrome: str=N
             # Translate if needed
             if translate != 'no':
                 # get redirect url
-                redirect_url = f'https://contentextractor-herokuapp-com.translate.goog/?url={url}&format={format}&chrome={always_use_chrome}&translate=no&_x_tr_sl=auto&_x_tr_tl={translate}'
+                redirect_url = f'https://contentextractor-yan-dev-br.translate.goog/?url={url}&format={format}&chrome={always_use_chrome}&translate=no&_x_tr_sl=auto&_x_tr_tl={translate}'
                 # redirect to google translate
                 return RedirectResponse(redirect_url)
             else:
