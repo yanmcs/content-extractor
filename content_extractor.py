@@ -192,7 +192,15 @@ def html_to_json(html):
         # Check if heading has text
         if heading.text:
             # Create a dictionary with heading and paragraphs
-            heading_dict = {"heading": heading.text, "paragraphs": []}
+            # Check if heading is h1, h2... to add #, ##...
+            if heading.name == 'h1':
+                heading_dict = {"heading": '# ' + heading.text, "paragraphs": []}
+            elif heading.name == 'h2':
+                heading_dict = {"heading": '## ' + heading.text, "paragraphs": []}
+            elif heading.name == 'h3':
+                heading_dict = {"heading": '### ' + heading.text, "paragraphs": []}
+            elif heading.name == 'h4':
+                heading_dict = {"heading": '#### ' + heading.text, "paragraphs": []}
             # Find all paragraphs below the heading before the next heading
             paragraphs = heading.find_next_siblings()
             for paragraph in paragraphs:
@@ -208,10 +216,10 @@ def html_to_json(html):
                             # Check if li has ponctuation
                             if li.text.strip()[-1] in ['.', '?', '!',';']:
                                 # Add text to heading
-                                heading_dict["paragraphs"].append(li.text)
+                                heading_dict["paragraphs"].append("- " + li.text)
                             else:
                                 # Add text to heading
-                                heading_dict["paragraphs"].append(li.text + ".")
+                                heading_dict["paragraphs"].append("- " + li.text + ".")
                 else:
                     # Remove extra space and line breaks
                     paragraph_text = paragraph.text.strip()
