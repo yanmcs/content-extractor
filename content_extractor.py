@@ -16,6 +16,7 @@ from bs4 import BeautifulSoup as Bs
 import cfscrape
 import time
 from string import punctuation
+import markdownify
 
 class ChromeSession:
     """
@@ -269,6 +270,9 @@ def html_to_json(html):
     # Remove extra line breaks
     while '\n\n\n' in result["article_text"]:
         result["article_text"] = result["article_text"].replace('\n\n\n', '\n\n')
+
+    # Convert html to markdown
+    result["article_markdown_content"] = markdownify.markdownify(result["article_html_content"], heading_style="ATX")
 
     return result
 

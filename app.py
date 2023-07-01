@@ -72,8 +72,19 @@ async def index(request: Request, url: str=None, format: str=None, chrome: str=N
                 return RedirectResponse(redirect_url)
             else:
                 # adding source to html content
-                source_html = f'<p>Source: <a href="{url}">{url}</a></p>'
+                source_html = f'<p>Source: <a href="{url}">{url}</a></p>\n'
                 return HTMLResponse(content=source_html + str(result['article_html_content']), status_code=200, media_type='text/html; charset=utf-8')
+        elif format == 'markdown':
+            # Translate if needed
+            if translate != 'no':
+                # get redirect url
+                redirect_url = f'https://contentextractor-yan-dev-br.translate.goog/?url={url}&format={format}&chrome={always_use_chrome}&translate=no&_x_tr_sl=auto&_x_tr_tl={translate}'
+                # redirect to google translate
+                return RedirectResponse(redirect_url)
+            else:
+                # adding source to html content
+                source_html = f'Source: [{url}]({url})\n\n'
+                return HTMLResponse(content=source_html + str(result['article_markdown_content']), status_code=200, media_type='text/plain; charset=utf-8')
         elif format == 'links':
             return result['urls']
         elif format == 'full_html':
