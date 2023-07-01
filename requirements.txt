@@ -1,5 +1,6 @@
 beautifulsoup4==4.12.2
 cfscrape==2.1.1
 fastapi==0.99.0
+markdownify==0.11.6
 selenium==4.10.0
 uvicorn==0.22.0
