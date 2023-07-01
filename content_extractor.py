@@ -272,7 +272,7 @@ def html_to_json(html):
         result["article_text"] = result["article_text"].replace('\n\n\n', '\n\n')
 
     # Convert html to markdown
-    result["article_markdown_content"] = markdownify.markdownify(result["article_html_content"], heading_style="ATX")
+    result["article_markdown_content"] = markdownify.markdownify(result["article_html_content"], heading_style="ATX").replace('\n\n\n', '\n\n')
 
     return result
 
