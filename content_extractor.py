@@ -135,8 +135,13 @@ def html_to_json(html):
             result["urls"].append(a['href'])
 
     # Setting article_html_content
+    result["article_html_content"] = ""
+    # find featured image if any
+    featured_image = soup.find("meta", {"property": "og:image"})
+    if featured_image:
+        result["article_html_content"] += "<img src='" + featured_image["content"] + "'/>\n"
     h1 = soup.find_all('h1')[-1]
-    result['article_html_content'] = "<h1>" + h1.text + "</h1>\n"
+    result['article_html_content'] += "<h1>" + h1.text + "</h1>\n"
     # iterate through all tags inside div if nested
     for tag in div_with_most_paragraphs.find_all(True):
         if tag.name == 'h2':
@@ -163,7 +168,7 @@ def html_to_json(html):
             if len(list.split("</li>")) > 2:
                 result["article_html_content"] += list
 
-    # Now we soup the article_html_content
+    # Now we soup the article_html_content to get the next information
     soup = Bs(result['article_html_content'], "html.parser")
 
     # Find all headings inside the div with most paragraphs
@@ -272,7 +277,7 @@ def html_to_json(html):
         result["article_text"] = result["article_text"].replace('\n\n\n', '\n\n')
 
     # Convert html to markdown
-    result["article_markdown_content"] = markdownify.markdownify(result["article_html_content"], heading_style="ATX").replace('\n\n\n', '\n\n')
+    result["article_markdown_content"] = markdownify.markdownify(result["article_html_content"], heading_style="ATX").replace('\n\n\n', '\n\n').replace('\n\n\n', '\n\n')
 
     return result
 
