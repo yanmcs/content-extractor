@@ -136,10 +136,6 @@ def html_to_json(html):
 
     # Setting article_html_content
     result["article_html_content"] = ""
-    # find featured image if any
-    featured_image = soup.find("meta", {"property": "og:image"})
-    if featured_image:
-        result["article_html_content"] += "<img src='" + featured_image["content"] + "'/>\n"
     h1 = soup.find_all('h1')[-1]
     result['article_html_content'] += "<h1>" + h1.text + "</h1>\n"
     # iterate through all tags inside div if nested
