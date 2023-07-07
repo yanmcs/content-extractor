@@ -39,6 +39,8 @@ class ChromeSession:
         self.options.add_argument("--disable-web-security")
         self.options.add_argument("--log-level=3")
         self.options.add_argument("--disable-dev-shm-usage")
+        # set tmp dir
+        self.options.add_argument("--user-data-dir=" + os.path.join(os.getcwd(), "tmp"))
         self.driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=self.options)
 
     def __enter__(self):
