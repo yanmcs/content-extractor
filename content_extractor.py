@@ -11,6 +11,8 @@ result = {
 """
 # import modules
 from selenium import webdriver
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from webdriver_manager.firefox import GeckoDriverManager
 import os
 from bs4 import BeautifulSoup as Bs
 import cfscrape
@@ -23,18 +25,21 @@ class ChromeSession:
     Class to manage a Chrome session
     """        
 
-    def __init__(self, headless=True):
-        self.options = webdriver.ChromeOptions() 
-        if headless:
-            self.options.add_argument('--headless')
-        self.options.add_argument("start-maximized")
-        self.options.add_argument('--no-sandbox')
-        self.options.add_argument('--disable-dev-shm-usage')
-        self.options.add_argument('--disable-gpu')
-        self.options.add_argument('--disable-extensions')
-        self.options.add_argument('--disable-browser-side-navigation')
-        self.options.add_argument('--disable-infobars')
-        self.driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=self.options)
+    def __init__(self):
+        self.options = webdriver.FirefoxOptions()
+        # headless mode
+        self.options.headless = True
+        self.options.add_argument("--blink-settings=imagesEnabled=false")
+        self.options.add_argument("--disable-notifications")
+        self.options.add_argument("--disable-infobars")
+        self.options.add_argument("--disable-extensions")
+        self.options.add_argument("--disable-popup-blocking")
+        self.options.add_argument("--disable-gpu")
+        self.options.add_argument("--no-sandbox")
+        self.options.add_argument("--disable-web-security")
+        self.options.add_argument("--log-level=3")
+        self.options.add_argument("--disable-dev-shm-usage")
+        self.driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=self.options)
 
     def __enter__(self):
         return self.driver
@@ -60,18 +65,18 @@ def extract_html_from_url(url, session):
         url = "http://" + url
 
     # Check if session is chrome or request
-    if isinstance(session, webdriver.chrome.webdriver.WebDriver): 
-        with session as chrome_session:
-            chrome_session.get(url)
+    if isinstance(session, webdriver.firefox.webdriver.WebDriver):
+        with session as browser_session:
+            browser_session.get(url)
             # Waiting page load
             i = 0
             while i < 5:
                 time.sleep(1)
-                if chrome_session.execute_script("return document.readyState") == "complete":
+                if browser_session.execute_script("return document.readyState") == "complete":
                     # scroll page a little to simulate a human user
-                    chrome_session.execute_script("window.scrollBy(0, 100)")
+                    browser_session.execute_script("window.scrollBy(0, 100)")
                     time.sleep(1)
-                    html = chrome_session.page_source
+                    html = browser_session.page_source
                     i = 5
                 i += 1
     else:
@@ -116,6 +121,8 @@ def html_to_json(html):
     article_tag = soup.find("article")
     if article_tag:
         div_with_most_paragraphs = article_tag
+    elif soup.find("div", {"id": "content"}):
+        div_with_most_paragraphs = soup.find("div", {"id": "content"})
     else:
         divs = soup.find_all(['div', 'article', 'section', 'main'])
         for div in divs:

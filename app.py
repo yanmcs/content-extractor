@@ -3,14 +3,11 @@ import content_extractor
 
 # Everything else
 import time
-from fastapi import FastAPI, HTTPException, Request, BackgroundTasks, Response
+from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, FileResponse, StreamingResponse, PlainTextResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 import os
-import json
-import traceback
-from datetime import datetime
 
 
 file_path = os.path.dirname(os.path.abspath(__file__))
