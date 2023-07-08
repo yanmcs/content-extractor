@@ -44,7 +44,7 @@ class ChromeSession:
         if os.name == "nt":
             self.driver = webdriver.Firefox(options=self.options, service_log_path=os.path.devnull, service=FirefoxService(GeckoDriverManager().install()))
         else:
-            self.driver = webdriver.Firefox(options=self.options, service_log_path=os.path.devnull, service=FirefoxService(executable_path="geckodriver"))
+            self.driver = webdriver.Firefox(options=self.options, service=FirefoxService(executable_path="geckodriver"))
 
     def __enter__(self):
         return self.driver
