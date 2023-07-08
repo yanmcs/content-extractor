@@ -11,6 +11,7 @@ result = {
 """
 # import modules
 from selenium import webdriver
+from selenium.webdriver import FirefoxOptions
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from webdriver_manager.firefox import GeckoDriverManager
 import os
@@ -26,15 +27,12 @@ class ChromeSession:
     """        
 
     def __init__(self, headless=True, options=None):
-        options = webdriver.FirefoxOptions()
-        # headless mode
-        options.headless = True
-        # set tmp dir
-        options.add_argument("--user-data-dir=" + os.path.join(os.getcwd(), "tmp"))
+        opts = FirefoxOptions()
+        opts.add_argument("--headless")
         if os.name == "nt":
             self.driver = webdriver.Firefox(options=options, service_log_path=os.path.devnull, service=FirefoxService(GeckoDriverManager().install()))
         else:
-            self.driver = webdriver.Firefox(options=options, service=FirefoxService(executable_path="geckodriver"))
+            self.driver = webdriver.Firefox(options=opts)
 
     def __enter__(self):
         return self.driver
