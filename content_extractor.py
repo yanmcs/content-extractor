@@ -25,26 +25,16 @@ class ChromeSession:
     Class to manage a Chrome session
     """        
 
-    def __init__(self):
-        self.options = webdriver.FirefoxOptions()
+    def __init__(self, headless=True, options=None):
+        options = webdriver.FirefoxOptions()
         # headless mode
-        self.options.headless = True
-        self.options.add_argument("--blink-settings=imagesEnabled=false")
-        self.options.add_argument("--disable-notifications")
-        self.options.add_argument("--disable-infobars")
-        self.options.add_argument("--disable-extensions")
-        self.options.add_argument("--disable-popup-blocking")
-        self.options.add_argument("--disable-gpu")
-        self.options.add_argument("--no-sandbox")
-        self.options.add_argument("--disable-web-security")
-        self.options.add_argument("--log-level=3")
-        self.options.add_argument("--disable-dev-shm-usage")
+        options.headless = True
         # set tmp dir
-        self.options.add_argument("--user-data-dir=" + os.path.join(os.getcwd(), "tmp"))
+        options.add_argument("--user-data-dir=" + os.path.join(os.getcwd(), "tmp"))
         if os.name == "nt":
-            self.driver = webdriver.Firefox(options=self.options, service_log_path=os.path.devnull, service=FirefoxService(GeckoDriverManager().install()))
+            self.driver = webdriver.Firefox(options=options, service_log_path=os.path.devnull, service=FirefoxService(GeckoDriverManager().install()))
         else:
-            self.driver = webdriver.Firefox(options=self.options, service=FirefoxService(executable_path="geckodriver"))
+            self.driver = webdriver.Firefox(options=options, service=FirefoxService(executable_path="geckodriver"))
 
     def __enter__(self):
         return self.driver
