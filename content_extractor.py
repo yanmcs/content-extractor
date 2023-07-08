@@ -41,7 +41,10 @@ class ChromeSession:
         self.options.add_argument("--disable-dev-shm-usage")
         # set tmp dir
         self.options.add_argument("--user-data-dir=" + os.path.join(os.getcwd(), "tmp"))
-        self.driver = webdriver.Firefox(options=self.options)
+        if os.name == "nt":
+            self.driver = webdriver.Firefox(options=self.options, service_log_path=os.path.devnull, service=FirefoxService(GeckoDriverManager().install()))
+        else:
+            self.driver = webdriver.Firefox(options=self.options, service_log_path=os.path.devnull, service=FirefoxService(executable_path="geckodriver"))
 
     def __enter__(self):
         return self.driver
