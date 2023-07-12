@@ -119,12 +119,12 @@ def html_to_json(html):
     else:
         divs = soup.find_all(['div', 'article', 'section', 'main'])
         for div in divs:
-            if div.select('p'):
-                number_of_paragraphs = len(div.select('p'))
+            if div.find_all('p'):
+                number_of_paragraphs = len(div.find_all('p'))
                 if number_of_paragraphs > len(div_with_most_paragraphs):
                     div_with_most_paragraphs = div
 
-    # If div_with_most_paragraphs has less than 3 paragraphs, we will use body
+    # If div_with_most_paragraphs has less than 3 paragraphs, we will use body and select all paragraphs that have at least 4 spaces and any punctuation
     if len(div_with_most_paragraphs.find_all('p')) < 3:
         div_with_most_paragraphs = soup.find('body')
     
