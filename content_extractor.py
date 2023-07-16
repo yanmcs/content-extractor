@@ -49,6 +49,18 @@ def cfscrape_session():
     return session
 
 
+def check_ponctuation(text, number_of_punctuation_marks=2):
+    ''' Check if we have ponctuation marks in a text '''
+    count = 0
+    for char in text:
+        if char in punctuation:
+            count += 1
+    if count >= number_of_punctuation_marks:
+        return True
+    else:
+        return False
+
+
 def extract_html_from_url(url, session):
     """
     Extracts html from given url using either a Chrome session or a request session
@@ -104,20 +116,30 @@ def html_to_json(html):
     canonical_url = soup.find("link", {"rel": "canonical"})
     if canonical_url:
         result["article_url"] = canonical_url["href"]
+
+    # ADVANCE FILTERING
+    # We are going to iterate through all the tags inside body and get all H1, H2, H3, H4, P, OL, UL
+    # For titles we will check if we have at least 1 space
+    # For paragraphs we will check if we have at least 4 spaces and at least 2 punctuation marks (.,;:!?)
+    # For lists we will check if we have at least 2 li and it is not a link
+    # We will also check if the tag has at least 1 space
+    result['advanced_content'] = []
+    for tag in soup.find_all(True):
+        if tag.name[0] == 'h' and tag.name[1].isdigit():
+            if tag.text and " " in tag.text.strip():
+                result['advanced_content'] += '<' + tag.name + '>' + tag.text + '</' + tag.name + '>'
+        elif tag.name == 'p':
+            if tag.text and " " in tag.text.strip() and check_ponctuation(tag.text.strip()):
+                result['advanced_content'] += '<' + tag.name + '>' + tag.text + '</' + tag.name + '>'
+        elif tag.name == 'ol' or tag.name == 'ul':
+            if tag.text and " " in tag.text.strip() and check_ponctuation(tag.text.strip(), 1) and len(tag.find_all('li')) >= 2:
+                result['advanced_content'] += '<' + tag.name + '>' + tag.text + '</' + tag.name + '>'
+        elif tag.name == 'li':
+            if tag.text and " " in tag.text.strip() and check_ponctuation(tag.text.strip(), 1):
+                result['advanced_content'] += '<' + tag.name + '>' + tag.text + '</' + tag.name + '>'
     
-    
-    # Find div with most paragraphs
-    # Usually the div with the most paragraphs is the one with the article content
-    div_with_most_paragraphs = ''
-    # Check if there is an article tag
-    # If there is, we will use that div
-    article_tag = soup.find("article")
-    if article_tag:
-        div_with_most_paragraphs = article_tag
-    elif soup.find("div", {"id": "content"}):
-        div_with_most_paragraphs = soup.find("div", {"id": "content"})
-    else:
-        div_with_most_paragraphs = soup.find('body')
+    # div with most paragraphs will be te soup of the advanced content
+    div_with_most_paragraphs = Bs(''.join(result['advanced_content']), "html.parser")    
     
     # Setting urls
     # Find all urls inside the div with most paragraphs
