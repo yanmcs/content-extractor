@@ -21,6 +21,9 @@ import time
 from string import punctuation
 import markdownify
 from youtube_transcript_api import YouTubeTranscriptApi
+import urllib.request
+import json
+import urllib
 
 class ChromeSession:
     """
@@ -76,6 +79,23 @@ def get_youtube_transcript(url):
     return transcript
 
 
+def get_youtube_information(url):
+
+    #change to yours VideoID or change url inparams
+    VideoID = "SZj6rAYkYOg" 
+
+    params = {"format": "json", "url": "https://www.youtube.com/watch?v=%s" % VideoID}
+    url = "https://www.youtube.com/oembed"
+    query_string = urllib.parse.urlencode(params)
+    url = url + "?" + query_string
+
+    with urllib.request.urlopen(url) as response:
+        response_text = response.read()
+        data = json.loads(response_text.decode())
+
+    return data
+
+
 def extract_html_from_url(url, session):
     """
     Extracts html from given url using either a Chrome session or a request session
@@ -86,7 +106,14 @@ def extract_html_from_url(url, session):
 
     if 'youtube.com' in url:
         content = get_youtube_transcript(url)
-        return '<p>' + content + '</p>'
+        information = get_youtube_information(url)
+        title = f'<h1>{information["title"]}</h1>'
+        thumbnail = f'<img src="{information["thumbnail_url"]}" alt="{information["title"]}">'
+        source = f'<a href="{url}">Fonte</a>'
+        conteudo  = f'<p>{content}</p>'
+        iframe = information['html']
+        html = f'{source}{title}{thumbnail}{conteudo}{iframe}'
+        return html
 
     # Check if session is chrome or request
     if isinstance(session, webdriver.firefox.webdriver.WebDriver):
@@ -309,4 +336,7 @@ def html_to_json(html):
 
     return result
 
+
+if __name__ == '__main__':
+    get_youtube_information("https://www.youtube.com/watch?v=9bZkp7q19f0")
 
