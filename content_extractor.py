@@ -20,6 +20,7 @@ import cfscrape
 import time
 from string import punctuation
 import markdownify
+from youtube_transcript_api import YouTubeTranscriptApi
 
 class ChromeSession:
     """
@@ -61,6 +62,20 @@ def check_ponctuation(text, number_of_punctuation_marks=2):
         return False
 
 
+def get_youtube_transcript(url):
+    '''Get youtube transcript from url'''
+    # set up video id
+    id = url.split('v=')[1]
+    if '&' in id:
+        id = id.split('&')[0]
+    # get transcript from youtube
+    transcript = YouTubeTranscriptApi.get_transcript(
+        id, languages=['pt', 'en', 'es'])
+    # print(transcript)
+    transcript = ' '.join([t['text'] for t in transcript])
+    return transcript
+
+
 def extract_html_from_url(url, session):
     """
     Extracts html from given url using either a Chrome session or a request session
@@ -68,6 +83,10 @@ def extract_html_from_url(url, session):
     # Check if url is valid
     if not url.startswith("http"):
         url = "http://" + url
+
+    if 'youtube.com' in url:
+        content = get_youtube_transcript(url)
+        return '<p>' + content + '</p>'
 
     # Check if session is chrome or request
     if isinstance(session, webdriver.firefox.webdriver.WebDriver):
