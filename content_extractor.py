@@ -82,7 +82,9 @@ def get_youtube_transcript(url):
 def get_youtube_information(url):
 
     #change to yours VideoID or change url inparams
-    VideoID = "SZj6rAYkYOg" 
+    VideoID = url.split('v=')[1]
+    if '&' in VideoID:
+        VideoID = VideoID.split('&')[0]
 
     params = {"format": "json", "url": "https://www.youtube.com/watch?v=%s" % VideoID}
     url = "https://www.youtube.com/oembed"
